@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/game_data.dart';
+import 'games/hero_game_screen.dart';
+import 'games/climate_game_screen.dart';
+import 'games/city_game_screen.dart';
 
 class GameDetailScreen extends StatelessWidget {
   final GameData game;
@@ -59,6 +62,38 @@ class GameDetailScreen extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text('الجمهور: ${game.targetAudience}'),
                     ],
+                  ),
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Widget? gameScreen;
+                        if (game.title.contains('البطل البيئي')) {
+                          gameScreen = const HeroGameScreen();
+                        } else if (game.title.contains('مكافحة تغير المناخ')) {
+                          gameScreen = const ClimateGameScreen();
+                        } else if (game.title.contains('تحدي المدينة المستدامة')) {
+                          gameScreen = const CityGameScreen();
+                        }
+
+                        if (gameScreen != null) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => gameScreen!),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('اللعبة قيد التطوير')),
+                          );
+                        }
+                      },
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('ابدأ اللعب الآن'),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ],
               ),
