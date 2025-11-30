@@ -25,8 +25,8 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
       subtitle: 'طاقة متجددة',
       icon: Icons.bolt,
       color: Colors.amber[700]!,
-      top: 0.25,
-      left: 0.2,
+      top: 0.75,
+      left: 0.15,
       unlocked: true,
     ),
     _SectorNode(
@@ -35,8 +35,8 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
       subtitle: 'إعادة التدوير',
       icon: Icons.recycling,
       color: Colors.green[700]!,
-      top: 0.25,
-      left: 0.7,
+      top: 0.55,
+      left: 0.4,
       unlocked: false,
     ),
     _SectorNode(
@@ -45,8 +45,8 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
       subtitle: 'مواصلات خضراء',
       icon: Icons.directions_subway,
       color: Colors.blue[700]!,
-      top: 0.65,
-      left: 0.35,
+      top: 0.35,
+      left: 0.65,
       unlocked: false,
     ),
     _SectorNode(
@@ -55,8 +55,8 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
       subtitle: 'إنتاج محلي',
       icon: Icons.agriculture,
       color: Colors.lightGreen[700]!,
-      top: 0.65,
-      left: 0.75,
+      top: 0.15,
+      left: 0.85,
       unlocked: false,
     ),
   ];
@@ -130,18 +130,38 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
       ),
       body: Stack(
         children: [
-          // Background - City grid
+          // Background
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Colors.grey[200]!, Colors.grey[300]!, Colors.grey[400]!],
+                colors: [
+                  Colors.blue[50]!,
+                  Colors.teal[50]!,
+                  Colors.green[50]!,
+                ],
               ),
             ),
           ),
 
-          // Connection paths between sectors
+          // Decorative City Skyline
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Opacity(
+              opacity: 0.3,
+              child: Image.asset(
+                'assets/city_skyline.png', // Assuming asset exists or using placeholder
+                height: 200,
+                fit: BoxFit.cover,
+                errorBuilder: (c, o, s) => Container(height: 100, color: Colors.grey[300]),
+              ),
+            ),
+          ),
+
+          // Path connecting sectors
           CustomPaint(
             size: Size.infinite,
             painter: _PathPainter(_sectors),
@@ -151,30 +171,30 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
           ..._sectors.map((sector) {
             return Positioned(
               top: MediaQuery.of(context).size.height * sector.top,
-              left: MediaQuery.of(context).size.width * sector.left - 70,
+              left: MediaQuery.of(context).size.width * sector.left - 60,
               child: GestureDetector(
                 onTap: () => _navigateToSector(sector),
                 child: Column(
                   children: [
                     // Sector Node
                     Container(
-                      width: 140,
-                      height: 140,
+                      width: 120,
+                      height: 120,
                       decoration: BoxDecoration(
-                        color: sector.unlocked ? sector.color : Colors.grey[500],
+                        color: sector.unlocked ? sector.color : Colors.grey[400],
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 6),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
                           ),
                         ],
                         border: Border.all(
                           color: _currentSector == sector.id
                               ? Colors.yellow
                               : Colors.white,
-                          width: 5,
+                          width: 4,
                         ),
                       ),
                       child: Stack(
@@ -182,29 +202,29 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
                         children: [
                           Icon(
                             sector.icon,
-                            size: 60,
+                            size: 50,
                             color: Colors.white,
                           ),
                           if (!sector.unlocked)
                             const Icon(
                               Icons.lock,
-                              size: 35,
+                              size: 30,
                               color: Colors.white70,
                             ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     // Sector Info
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.95),
-                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
-                            blurRadius: 6,
+                            blurRadius: 4,
                           ),
                         ],
                       ),
@@ -214,14 +234,14 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
                             sector.title,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                             textAlign: TextAlign.center,
                           ),
                           Text(
                             sector.subtitle,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.grey[600],
                             ),
                             textAlign: TextAlign.center,
@@ -241,14 +261,14 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
             curve: Curves.easeInOut,
             top: MediaQuery.of(context).size.height *
                     _sectors.firstWhere((s) => s.id == _currentSector).top -
-                80,
+                70,
             left: MediaQuery.of(context).size.width *
                     _sectors.firstWhere((s) => s.id == _currentSector).left -
-                30,
+                25,
             child: const CharacterAnimator(
-              isWalking: false,
+              isWalking: true,
               size: 90,
-              outfit: CharacterOutfit.city,
+              outfit: CharacterOutfit.adventure,
             ),
           ),
 
@@ -257,14 +277,14 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
             top: 20,
             left: 20,
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.95),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
+                    blurRadius: 4,
                   ),
                 ],
               ),
@@ -286,12 +306,10 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
             ),
           ),
 
-
-
           // Debug unlock button
           Positioned(
             bottom: 20,
-            left: 20,
+            right: 20,
             child: FloatingActionButton(
               onPressed: _unlockNextSector,
               backgroundColor: Colors.orange,
@@ -306,19 +324,19 @@ class _CityGameMapScreenState extends State<CityGameMapScreen> {
 
   Widget _buildStatRow(String label, String value, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           SizedBox(
-            width: 120,
-            child: Text(label, style: const TextStyle(fontSize: 14)),
+            width: 100,
+            child: Text(label, style: const TextStyle(fontSize: 13)),
           ),
           Text(
             value,
             style: TextStyle(
               color: color,
               fontWeight: FontWeight.bold,
-              fontSize: 14,
+              fontSize: 13,
             ),
           ),
         ],
@@ -357,10 +375,11 @@ class _PathPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.teal.withOpacity(0.3)
-      ..strokeWidth = 4
-      ..style = PaintingStyle.stroke;
+      ..strokeWidth = 6
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
-    // Draw connections between sectors
+    final path = Path();
     for (int i = 0; i < sectors.length - 1; i++) {
       final start = Offset(
         size.width * sectors[i].left,
@@ -370,10 +389,23 @@ class _PathPainter extends CustomPainter {
         size.width * sectors[i + 1].left,
         size.height * sectors[i + 1].top,
       );
-      canvas.drawLine(start, end, paint);
+
+      if (i == 0) {
+        path.moveTo(start.dx, start.dy);
+      }
+
+      // Curved path
+      final controlPoint = Offset(
+        (start.dx + end.dx) / 2,
+        (start.dy + end.dy) / 2 - 50, // Curve upwards
+      );
+      path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, end.dx, end.dy);
     }
+
+    canvas.drawPath(path, paint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
+

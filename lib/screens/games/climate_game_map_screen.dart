@@ -27,8 +27,8 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
       subtitle: 'تحويل المصانع',
       icon: Icons.factory,
       color: Colors.grey[700]!,
-      top: 0.3,
-      left: 0.2,
+      top: 0.75,
+      left: 0.15,
       unlocked: true,
     ),
     _RegionNode(
@@ -37,8 +37,8 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
       subtitle: 'طاقة متجددة',
       icon: Icons.bolt,
       color: Colors.amber[700]!,
-      top: 0.3,
-      left: 0.7,
+      top: 0.55,
+      left: 0.4,
       unlocked: false,
     ),
     _RegionNode(
@@ -47,8 +47,8 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
       subtitle: 'أنظمة إنذار',
       icon: Icons.warning,
       color: Colors.red[700]!,
-      top: 0.65,
-      left: 0.35,
+      top: 0.35,
+      left: 0.65,
       unlocked: false,
     ),
     _RegionNode(
@@ -57,8 +57,8 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
       subtitle: 'محميات طبيعية',
       icon: Icons.nature,
       color: Colors.green[700]!,
-      top: 0.65,
-      left: 0.75,
+      top: 0.15,
+      left: 0.85,
       unlocked: false,
     ),
   ];
@@ -167,29 +167,29 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
           ..._regions.map((region) {
             return Positioned(
               top: MediaQuery.of(context).size.height * region.top,
-              left: MediaQuery.of(context).size.width * region.left - 70,
+              left: MediaQuery.of(context).size.width * region.left - 60,
               child: GestureDetector(
                 onTap: () => _navigateToRegion(region),
                 child: Column(
                   children: [
                     Container(
-                      width: 140,
-                      height: 140,
+                      width: 120,
+                      height: 120,
                       decoration: BoxDecoration(
                         color: region.unlocked ? region.color : Colors.grey[400],
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.3),
-                            blurRadius: 12,
-                            offset: const Offset(0, 6),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
                           ),
                         ],
                         border: Border.all(
                           color: _currentRegion == region.id
                               ? Colors.yellow
                               : Colors.white,
-                          width: 5,
+                          width: 4,
                         ),
                       ),
                       child: Stack(
@@ -197,28 +197,28 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
                         children: [
                           Icon(
                             region.icon,
-                            size: 60,
+                            size: 50,
                             color: Colors.white,
                           ),
                           if (!region.unlocked)
                             const Icon(
                               Icons.lock,
-                              size: 35,
+                              size: 30,
                               color: Colors.white70,
                             ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.95),
-                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.2),
-                            blurRadius: 6,
+                            blurRadius: 4,
                           ),
                         ],
                       ),
@@ -228,14 +228,14 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
                             region.title,
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                              fontSize: 14,
                             ),
                             textAlign: TextAlign.center,
                           ),
                           Text(
                             region.subtitle,
                             style: TextStyle(
-                              fontSize: 12,
+                              fontSize: 11,
                               color: Colors.grey[600],
                             ),
                             textAlign: TextAlign.center,
@@ -255,14 +255,14 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
             curve: Curves.easeInOut,
             top: MediaQuery.of(context).size.height *
                     _regions.firstWhere((r) => r.id == _currentRegion).top -
-                80,
+                70,
             left: MediaQuery.of(context).size.width *
                     _regions.firstWhere((r) => r.id == _currentRegion).left -
-                30,
+                25,
             child: const CharacterAnimator(
-              isWalking: false,
+              isWalking: true,
               size: 90,
-              outfit: CharacterOutfit.strategy,
+              outfit: CharacterOutfit.adventure,
             ),
           ),
 
@@ -271,14 +271,14 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
             top: 20,
             left: 20,
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.95),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.2),
-                    blurRadius: 8,
+                    blurRadius: 4,
                   ),
                 ],
               ),
@@ -317,19 +317,19 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
 
   Widget _buildStatRow(String label, int value, Color color) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           SizedBox(
-            width: 70,
-            child: Text(label, style: const TextStyle(fontSize: 14)),
+            width: 60,
+            child: Text(label, style: const TextStyle(fontSize: 13)),
           ),
           Container(
-            width: 100,
-            height: 20,
+            width: 80,
+            height: 16,
             decoration: BoxDecoration(
               color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: FractionallySizedBox(
               alignment: Alignment.centerLeft,
@@ -337,13 +337,13 @@ class _ClimateGameMapScreenState extends State<ClimateGameMapScreen> {
               child: Container(
                 decoration: BoxDecoration(
                   color: color,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(8),
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 8),
-          Text('$value%', style: TextStyle(color: color, fontWeight: FontWeight.bold)),
+          const SizedBox(width: 6),
+          Text('$value%', style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12)),
         ],
       ),
     );
@@ -380,10 +380,11 @@ class _ConnectionPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..color = Colors.blue.withOpacity(0.3)
-      ..strokeWidth = 4
-      ..style = PaintingStyle.stroke;
+      ..strokeWidth = 6
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
 
-    // Draw connections
+    final path = Path();
     for (int i = 0; i < regions.length - 1; i++) {
       final start = Offset(
         size.width * regions[i].left,
@@ -393,8 +394,20 @@ class _ConnectionPainter extends CustomPainter {
         size.width * regions[i + 1].left,
         size.height * regions[i + 1].top,
       );
-      canvas.drawLine(start, end, paint);
+
+      if (i == 0) {
+        path.moveTo(start.dx, start.dy);
+      }
+
+      // Curved path
+      final controlPoint = Offset(
+        (start.dx + end.dx) / 2,
+        (start.dy + end.dy) / 2 - 50, // Curve upwards
+      );
+      path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, end.dx, end.dy);
     }
+
+    canvas.drawPath(path, paint);
   }
 
   @override
