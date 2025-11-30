@@ -480,13 +480,16 @@ class _ForestLevelScreenState extends State<ForestLevelScreen> with TickerProvid
               bottom: 20,
               left: 20,
               right: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildControlButton(Icons.arrow_back, 'left'),
-                  _buildControlButton(Icons.arrow_upward, 'jump'),
-                  _buildControlButton(Icons.arrow_forward, 'right'),
-                ],
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildControlButton(Icons.arrow_back, 'left'),
+                    _buildControlButton(Icons.arrow_upward, 'jump'),
+                    _buildControlButton(Icons.arrow_forward, 'right'),
+                  ],
+                ),
               ),
             ),
         ],
