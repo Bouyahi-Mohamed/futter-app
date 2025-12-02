@@ -480,6 +480,7 @@ class _BeachLevelScreenState extends State<BeachLevelScreen>
             )
           else
             Stack(
+              fit: StackFit.expand,
               children: [
                 // Plastic items (Sorted by Z for depth)
                 ..._plasticItems.map((plastic) => Positioned(
@@ -553,6 +554,7 @@ class _BeachLevelScreenState extends State<BeachLevelScreen>
                     isWalking: _moveVector != Offset.zero,
                     size: 60,
                     outfit: CharacterOutfit.adventure,
+                    isWoman: true,
                   ),
                 ),
               ],
@@ -600,6 +602,7 @@ class _BeachLevelScreenState extends State<BeachLevelScreen>
                 children: [
                   // Joystick
                   VirtualJoystick(
+                    size: 120,
                     onChange: (vector) {
                       setState(() {
                         _moveVector = vector;

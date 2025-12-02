@@ -6,12 +6,14 @@ class CharacterAnimator extends StatefulWidget {
   final bool isWalking;
   final double size;
   final CharacterOutfit outfit;
+  final bool isWoman;
 
   const CharacterAnimator({
     super.key,
     this.isWalking = false,
     this.size = 100,
     this.outfit = CharacterOutfit.adventure,
+    this.isWoman = false,
   });
 
   @override
@@ -68,14 +70,34 @@ class _CharacterAnimatorState extends State<CharacterAnimator>
             // Head
             Positioned(
               top: 0,
-              child: Container(
-                width: widget.size * 0.3,
-                height: widget.size * 0.3,
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFCC80), // Skin tone
-                  shape: BoxShape.circle,
-                ),
-                child: _getHeadAccessory(),
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [
+                  // Hair (only for woman)
+                  if (widget.isWoman)
+                    Positioned(
+                      top: -5,
+                      child: Container(
+                        width: widget.size * 0.35,
+                        height: widget.size * 0.35,
+                        decoration: BoxDecoration(
+                          color: Colors.brown[800],
+                          borderRadius: BorderRadius.circular(widget.size * 0.2),
+                        ),
+                      ),
+                    ),
+                  // Face
+                  Container(
+                    width: widget.size * 0.3,
+                    height: widget.size * 0.3,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFFFFCC80), // Skin tone
+                      shape: BoxShape.circle,
+                    ),
+                    child: _getHeadAccessory(),
+                  ),
+                ],
               ),
             ),
             // Accessory (Backpack/Cape/Toolbelt)
@@ -123,7 +145,7 @@ class _CharacterAnimatorState extends State<CharacterAnimator>
     if (widget.outfit == CharacterOutfit.underwater) {
       return Icon(Icons.scuba_diving, size: widget.size * 0.25, color: Colors.black);
     } else if (widget.outfit == CharacterOutfit.city) {
-      return Icon(Icons.construction, size: widget.size * 0.25, color: Colors.yellow); // Hard hat metaphor
+      return Icon(Icons.construction, size: widget.size * 0.25, color: Colors.yellow); // Hard hat
     }
     return Icon(Icons.face, size: widget.size * 0.25, color: Colors.brown);
   }

@@ -370,6 +370,7 @@ class _ForestLevelScreenState extends State<ForestLevelScreen> with TickerProvid
             )
           else
             Stack(
+              fit: StackFit.expand,
               children: [
                 // Planting Spots
                 ..._plantingSpots.map((spot) => Positioned(
@@ -452,6 +453,7 @@ class _ForestLevelScreenState extends State<ForestLevelScreen> with TickerProvid
                     isWalking: _moveVector != Offset.zero,
                     size: 60,
                     outfit: CharacterOutfit.adventure,
+                    isWoman: true,
                   ),
                 ),
 
@@ -500,6 +502,7 @@ class _ForestLevelScreenState extends State<ForestLevelScreen> with TickerProvid
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       VirtualJoystick(
+                        size: 120,
                         onChange: (vector) {
                           setState(() {
                             _moveVector = vector;

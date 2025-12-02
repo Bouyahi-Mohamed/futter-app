@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:math';
 
 class TransportSectorScreen extends StatefulWidget {
   final VoidCallback? onComplete;
@@ -15,6 +17,8 @@ class _TransportSectorScreenState extends State<TransportSectorScreen> {
   int _publicTransportUse = 30;
   int _emissions = 80;
   int _budget = 800;
+  Timer? _trafficTimer;
+  final Random _random = Random();
   
   final List<List<String?>> _grid = List.generate(4, (_) => List.filled(4, null));
   
@@ -36,6 +40,60 @@ class _TransportSectorScreenState extends State<TransportSectorScreen> {
         row.fillRange(0, row.length, null);
       }
     });
+
+    _trafficTimer?.cancel();
+    _trafficTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      if (_isPlaying) _spawnTraffic();
+    });
+  }
+
+  @override
+  void dispose() {
+    _trafficTimer?.cancel();
+    super.dispose();
+  }
+
+  void _spawnTraffic() {
+    if (!_isPlaying) return;
+    
+    // Find empty spots
+    List<Point<int>> emptySpots = [];
+    for (int r = 0; r < 4; r++) {
+      for (int c = 0; c < 4; c++) {
+        if (_grid[r][c] == null) {
+          emptySpots.add(Point(r, c));
+        }
+      }
+    }
+
+    if (emptySpots.isNotEmpty && _random.nextDouble() < 0.4) { // 40% chance to spawn
+      final spot = emptySpots[_random.nextInt(emptySpots.length)];
+      setState(() {
+        _grid[spot.x][spot.y] = 'traffic';
+      });
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('⚠️ ازدحام مروري! اضغط عليه لإزالته'),
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.orange,
+        ),
+      );
+    }
+  }
+
+  void _clearTraffic(int row, int col) {
+    if (_budget < 50) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('تحتاج 50\$ لإزالة الازدحام!')),
+      );
+      return;
+    }
+
+    setState(() {
+      _grid[row][col] = null;
+      _budget -= 50;
+    });
   }
 
   void _selectBuilding(String type) {
@@ -43,6 +101,11 @@ class _TransportSectorScreenState extends State<TransportSectorScreen> {
   }
 
   void _placeBuilding(int row, int col) {
+    if (_grid[row][col] == 'traffic') {
+      _clearTraffic(row, col);
+      return;
+    }
+
     if (_selectedBuilding == null || _grid[row][col] != null) return;
     
     final building = _buildings[_selectedBuilding]!;
@@ -67,6 +130,7 @@ class _TransportSectorScreenState extends State<TransportSectorScreen> {
   }
 
   void _endGame(bool success) {
+    _trafficTimer?.cancel();
     setState(() => _isPlaying = false);
     widget.onStatsUpdate?.call(-180, 14, 12);
     
@@ -124,6 +188,8 @@ class _TransportSectorScreenState extends State<TransportSectorScreen> {
                         Text('الهدف:', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                         Text('• مواصلات عامة ≥ 70%'),
                         Text('• انبعاثات ≤ 40%'),
+                        SizedBox(height: 10),
+                        Text('⚠️ تجنب الازدحام المروري!', style: TextStyle(color: Colors.orange, fontWeight: FontWeight.bold)),
                       ],
                     ),
                   ),
@@ -187,7 +253,9 @@ class _TransportSectorScreenState extends State<TransportSectorScreen> {
                                   border: Border.all(color: Colors.grey[400]!, width: 2),
                                 ),
                                 child: buildingType != null
-                                    ? Icon(_buildings[buildingType]!.icon, color: Colors.white, size: 32)
+                                    ? buildingType == 'traffic'
+                                        ? const Icon(Icons.traffic, color: Colors.red, size: 32)
+                                        : Icon(_buildings[buildingType]!.icon, color: Colors.white, size: 32)
                                     : null,
                               ),
                             );
